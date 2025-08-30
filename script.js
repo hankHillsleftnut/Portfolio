@@ -34,7 +34,7 @@ function drawDeliveryChart() {
     }
     
     // Draw chart line
-    ctx.strokeStyle = '#fbbf24';
+    ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 3;
     ctx.beginPath();
     
@@ -49,7 +49,7 @@ function drawDeliveryChart() {
     ctx.stroke();
     
     // Draw data points
-    ctx.fillStyle = '#fbbf24';
+    ctx.fillStyle = '#10b981';
     dataPoints.forEach(point => {
         ctx.beginPath();
         ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
@@ -59,7 +59,7 @@ function drawDeliveryChart() {
     // Draw peak indicator (dotted line)
     const peakPoint = dataPoints[4]; // Fifth point is the peak
     ctx.setLineDash([5, 5]);
-    ctx.strokeStyle = '#fbbf24';
+    ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(peakPoint.x, peakPoint.y);
@@ -68,16 +68,12 @@ function drawDeliveryChart() {
     ctx.setLineDash([]); // Reset line dash
 }
 
-// Status dot animation
-function animateStatusDots() {
+// Status dot - static
+function setupStatusDots() {
     const dots = document.querySelectorAll('.status-dot');
-    let activeIndex = 0;
-    
-    setInterval(() => {
-        dots.forEach(dot => dot.classList.remove('active'));
-        dots[activeIndex].classList.add('active');
-        activeIndex = (activeIndex + 1) % dots.length;
-    }, 2000);
+    if (dots.length > 0) {
+        dots[0].classList.add('active');
+    }
 }
 
 // Smooth scroll for project navigation
@@ -100,106 +96,7 @@ function setupProjectNavigation() {
     });
 }
 
-// Intersection Observer for scroll animations
-function setupScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    // Observe project cards
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'all 0.6s ease-out';
-        observer.observe(card);
-    });
-}
 
-// Typing animation for the main title
-function typeWriterEffect() {
-    const titleElement = document.querySelector('.main-title');
-    if (!titleElement) return;
-    
-    const text = titleElement.textContent;
-    titleElement.textContent = '';
-    titleElement.style.opacity = '1';
-    
-    let index = 0;
-    const speed = 50;
-    
-    function type() {
-        if (index < text.length) {
-            titleElement.textContent += text.charAt(index);
-            index++;
-            setTimeout(type, speed);
-        }
-    }
-    
-    // Start typing after a short delay
-    setTimeout(type, 500);
-}
-
-// AI Interface Animation
-function animateAIInterface() {
-    const aiStatus = document.querySelector('.ai-status');
-    const responseText = document.querySelector('.response-bubble');
-    
-    if (!aiStatus || !responseText) return;
-    
-    // Animate status text
-    const statuses = ['Processing...', 'Analyzing...', 'Generating...', 'Complete!'];
-    let statusIndex = 0;
-    
-    const statusInterval = setInterval(() => {
-        aiStatus.textContent = statuses[statusIndex];
-        statusIndex++;
-        
-        if (statusIndex >= statuses.length) {
-            clearInterval(statusInterval);
-            
-            // Animate response text
-            const originalText = responseText.textContent;
-            responseText.textContent = '';
-            
-            let charIndex = 0;
-            const typeInterval = setInterval(() => {
-                responseText.textContent += originalText.charAt(charIndex);
-                charIndex++;
-                
-                if (charIndex >= originalText.length) {
-                    clearInterval(typeInterval);
-                }
-            }, 30);
-        }
-    }, 800);
-}
-
-// Parallax effect for left column
-function setupParallax() {
-    const rightColumn = document.querySelector('.right-column');
-    const leftColumn = document.querySelector('.left-column');
-    
-    if (window.innerWidth > 1024) { // Only on desktop
-        rightColumn.addEventListener('scroll', () => {
-            const scrollTop = rightColumn.scrollTop;
-            const scrollPercent = scrollTop / (rightColumn.scrollHeight - rightColumn.clientHeight);
-            
-            // Subtle parallax effect on bio text
-            const bioText = document.querySelector('.bio-text');
-            if (bioText) {
-                bioText.style.transform = `translateY(${scrollPercent * 20}px)`;
-            }
-        });
-    }
-}
 
 // Copy email to clipboard
 function setupEmailCopy() {
@@ -225,45 +122,15 @@ function setupEmailCopy() {
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize chart
-    setTimeout(drawDeliveryChart, 500);
+    drawDeliveryChart();
     
-    // Setup animations and interactions
-    animateStatusDots();
+    // Setup basic interactions
+    setupStatusDots();
     setupProjectNavigation();
-    setupScrollAnimations();
-    setupParallax();
     setupEmailCopy();
-    
-    // Animate AI interface when it comes into view
-    const aiCard = document.querySelector('.answersai');
-    if (aiCard) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    setTimeout(animateAIInterface, 1000);
-                    observer.unobserve(aiCard);
-                }
-            });
-        });
-        observer.observe(aiCard);
-    }
-    
-    // Start typing animation
-    setTimeout(typeWriterEffect, 1000);
 });
 
 // Handle window resize
 window.addEventListener('resize', () => {
     drawDeliveryChart();
-});
-
-// Smooth transitions for project cards
-document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-8px) scale(1.01)';
-    });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0) scale(1)';
-    });
 });
