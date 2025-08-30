@@ -17,7 +17,9 @@ html, body {
 .container {
     display: flex;
     height: 100vh;
-    max-width: 100vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
 }
 
 /* Left Column - Fixed */
@@ -100,7 +102,10 @@ html, body {
     margin-bottom: 24px;
     overflow: hidden;
     border: 2px solid #ffffff;
-    box-shadow: inset 0 0 0 1px #e5e7eb;
+    box-shadow: inset 0 0 0 1px #e5e7eb, 0 4px 12px rgba(0, 0, 0, 0.08);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-header {
@@ -130,11 +135,14 @@ html, body {
 
 .project-content {
     padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-image {
     width: 100%;
-    height: 160px;
+    flex: 1;
     background: #f9fafb;
     display: flex;
     align-items: center;
@@ -167,6 +175,7 @@ html, body {
 
 .project-info {
     padding: 20px;
+    flex-shrink: 0;
 }
 
 .project-title {
@@ -219,7 +228,7 @@ html, body {
     padding: 20px;
     background: #1f2937;
     color: white;
-    height: 160px;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
